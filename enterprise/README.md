@@ -81,29 +81,26 @@ You can also use entrypoint.sh to configure Splunk services with environment var
    ```
    version: '2'
    services:
-    vsplunk:
-        image: busybox
-        volumes:
+     vsplunk:
+       image: busybox
+       volumes:
          - /opt/splunk/etc
          - /opt/splunk/var
-        splunk:
-         image: splunk/splunk:6.5.0-monitor
-         hostname: splunkenterprise
-         environment:
-          SPLUNK_START_ARGS: --accept-license --answer-yes
-          SPLUNK_ENABLE_LISTEN: 9997
-          SPLUNK_ADD: tcp 1514
-          SPLUNK_USER: root
-         volumes_from:
-          - vsplunk
-         volumes:
-          - /var/lib/docker/containers:/host/containers:ro
-          - /var/run/docker.sock:/var/run/docker.sock:ro
-         ports:
-          - "8000:8000"
-          - "9997:9997"
-          - "8088:8088"
-          - "1514:1514"
+     splunkenterprise:
+       #build: .
+       hostname: splunkenterprise
+       image: splunk/splunk:6.5.0
+       environment:
+         SPLUNK_START_ARGS: --accept-license
+         SPLUNK_ENABLE_LISTEN: 9997
+         SPLUNK_ADD: tcp 1514
+       volumes_from:
+         - vsplunk
+       ports:
+         - "8000:8000"
+         - "9997:9997"
+         - "8088:8088"
+         - "1514:1514"
    ```
 4. Save the file and close it.
 5. Run the `docker-compose` utility in the same directory.
